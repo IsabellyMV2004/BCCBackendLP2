@@ -1,4 +1,4 @@
-import CategoriaDAO from "../Persistencia/CategoriaDAO.js";
+import CategoriaDAO from "../Persistencia/categoriaDAO.js";
 
 export default class Categoria {
     // Atributos privados usando a sintaxe #

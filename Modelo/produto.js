@@ -127,3 +127,4 @@ export default class Produto{
         await prodDAO.alterar(this);
     }
 }
+

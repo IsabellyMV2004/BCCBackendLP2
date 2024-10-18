@@ -10,8 +10,7 @@ import rotaProduto from './Rotas/rotaProdutos.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-
-//carregar as variaveis de ambiente a partir
+//carregar as variáveis de ambiente a partir
 //do arquivo .env localizado na raiz do projeto
 dotenv.config();
 
