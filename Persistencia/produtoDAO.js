@@ -1,8 +1,8 @@
 //DAO - Data Access Object
 import Produto from "../Modelo/produto.js";
-import conectar from "./Conexao.js";
 import Categoria from "../Modelo/categoria.js";
 
+import conectar from "./Conexao.js";
 export default class ProdutoDAO {
     constructor() {
         this.init();
@@ -23,7 +23,7 @@ export default class ProdutoDAO {
                 prod_dataValidade DATE NOT NULL,
                 fk_codigo_cat INT NOT NULL,
                 CONSTRAINT pk_produto PRIMARY KEY(prod_codigo),
-                CONSTRAINT fk_categoria FOREIGN KEY(fk_codigo_cat) REFERENCES categoria(prod_codigo)
+                CONSTRAINT fk_categoria FOREIGN KEY(fk_codigo_cat) REFERENCES categoria(codigo) 
             )
         `;
             await conexao.execute(sql);
@@ -57,7 +57,7 @@ export default class ProdutoDAO {
     async alterar(produto) {
         if (produto instanceof Produto) {
             const conexao = await conectar();
-            const sql = `UPDATE produto SET prod_descricao=?,prod_precoCusto=?,prod_precoVenda=?,prod_qtdEstoque=?,prod_urlImagem=?,prod_dataValidade=str_to_date(?,'%d/%m/%Y'), fk_codigo_cat=?
+            const sql = `UPDATE produto SET prod_descricao=?,prod_precoCusto=?,prod_precoVenda=?,prod_qtdEstoque=?,prod_urlImagem=?,prod_dataValidade=str_to_date(?,'%d/%m/%Y'), fk_codigo_cat = ?
                 WHERE prod_codigo = ?
             `;
             let parametros = [
@@ -81,20 +81,20 @@ export default class ProdutoDAO {
         let parametros = [];
         if (isNaN(parseInt(termo))) {
             sql = `SELECT * FROM produto p
-                INNER JOIN categoria c ON p.fk_codigo_cat = c.prod_codigo
-                WHERE prod_descricao LIKE ?`;
+                   INNER JOIN categoria c ON p.fk_codigo_cat = c.prod_codigo
+                   WHERE prod_descricao LIKE ?`;
             parametros = ['%' + termo + '%'];
         }
         else {
             sql = `SELECT * FROM produto p
-                INNER JOIN categoria c ON p.fk_codigo_cat = c.prod_codigo
-                WHERE prod_codigo = ?`;
+                   INNER JOIN categoria c ON p.fk_codigo_cat = c.codigo 
+                   WHERE prod_codigo = ?`
             parametros = [termo];
         }
         const [linhas, campos] = await conexao.execute(sql, parametros);
         let listaProdutos = [];
         for (const linha of linhas) {
-            const categoria = new Categoria(linha['codigo'],linha["descricao"]);
+            const categoria = new Categoria(linha['codigo'],linha["descricao"]);    
             const produto = new Produto(
                 linha['prod_codigo'],
                 linha['prod_descricao'],
@@ -113,7 +113,7 @@ export default class ProdutoDAO {
     async excluir(produto) {
         if (produto instanceof Produto) {
             const conexao = await conectar();
-            const sql = `DELETE FROM produto WHERE prod_codigo = ?`;
+            const sql = `DELETE FROM produto WHERE codigo = ?`;
             let parametros = [
                 produto.codigo
             ]; //dados do produto
