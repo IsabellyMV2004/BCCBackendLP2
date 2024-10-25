@@ -69,7 +69,7 @@ export default class CategoriaDAO{
             parametros.push(termo);
         }
         const conexao = await conectar();
-        
+        await conexao.release();
         const [registros, campos] = await conexao.query(sql, parametros);
         let listaCategoria=[];
         for (const registro of registros){
